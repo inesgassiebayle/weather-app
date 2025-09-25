@@ -28,3 +28,4 @@ ENV WEATHER_PORT=50052
 EXPOSE 50052
 
 CMD ["python", "weather-service/server.py"]
+
