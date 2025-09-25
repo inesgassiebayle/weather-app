@@ -1,0 +1,25 @@
+services:
+  location-service:
+    build:
+      context: ./location-service
+      dockerfile: Dockerfile
+    container_name: weather-location-service
+    environment:
+      - LOCATION_PORT=${LOCATION_SERVICE_PORT}
+    ports:
+      - "${LOCATION_SERVICE_PORT}:50051"
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: weather-gateway
+    environment:
+      - GATEWAY_PORT=${GATEWAY_PORT}
+      - LOCATION_SERVICE_HOST=${LOCATION_SERVICE_HOST}
+      - LOCATION_SERVICE_PORT=${LOCATION_SERVICE_PORT}
+    ports:
+      - "${GATEWAY_PORT}:3000"
+    depends_on:
+      - location-service
+
