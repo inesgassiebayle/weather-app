@@ -1,0 +1,29 @@
+syntax = "proto3";
+package weatherapp;
+
+service LocationService {
+  rpc getLocation (LocationServiceRequest) returns (LocationCoordinates);
+}
+
+service WeatherService {
+  rpc GetWeather (LocationCoordinates) returns (WeatherServiceResponse);
+}
+
+message LocationServiceRequest {
+  string ip = 1;
+}
+
+message LocationCoordinates {
+  double lat = 1;
+  double lon = 2;
+}
+
+message WeatherServiceResponse {
+  double temperature = 1;
+  double windspeed = 2;
+  string observation_time = 3;
+  string unit_temperature = 4;
+  string unit_windspeed = 5;
+  double humidity = 6;
+  double precip_mm = 7;
+}
