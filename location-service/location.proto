@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package weatherapp;
+
+message LocationServiceRequest {
+  string ip = 1;
+}
+
+message LocationServiceResponse {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+service LocationService {
+  rpc GetLocation (LocationServiceRequest) returns (LocationServiceResponse);
+}
