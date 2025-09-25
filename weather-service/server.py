@@ -103,7 +103,7 @@ class WeatherServiceServicer(pb_grpc.WeatherServiceServicer):
 
 
 def serve():
-    port = os.getenv("WEATHER_PORT")
+    port = os.getenv("WEATHER_PORT", "50052")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb_grpc.add_WeatherServiceServicer_to_server(WeatherServiceServicer(), server)
     server.add_insecure_port(f"[::]:{port}")

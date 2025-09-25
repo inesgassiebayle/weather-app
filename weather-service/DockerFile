@@ -1,0 +1,30 @@
+FROM python:3.11-slim
+
+# Evita prompts en apt (por si luego agregás paquetes del sistema)
+ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /app
+
+# 1) Dependencias Python
+COPY weather-service/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# 2) Copiamos proto y lo compilamos a stubs dentro del paquete "proto"
+COPY proto/ /app/proto/
+# Asegura que "proto" sea un paquete Python
+RUN [ -f /app/proto/__init__.py ] || touch /app/proto/__init__.py
+# Genera weatherapp_pb2.py y weatherapp_pb2_grpc.py en /app/proto
+RUN python -m grpc_tools.protoc \
+    -I /app/proto \
+    --python_out=/app/proto \
+    --grpc_python_out=/app/proto \
+    /app/proto/weatherapp.proto
+
+# 3) Copiamos el servidor
+COPY weather-service/server.py /app/weather-service/server.py
+
+# 4) Runtime
+ENV PYTHONPATH=/app
+ENV WEATHER_PORT=50052
+EXPOSE 50052
+
+CMD ["python", "weather-service/server.py"]
