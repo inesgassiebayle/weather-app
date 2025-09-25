@@ -2,11 +2,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copiar package.json del gateway
+COPY gateway/package*.json ./
 
 RUN npm ci --only=production
 
-COPY . .
+# Copiar archivos del gateway
+COPY gateway/ .
+
+# Copiar la carpeta proto
+COPY proto/ ./proto/
 
 RUN npm run build
 

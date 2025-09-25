@@ -4,13 +4,19 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     gcc \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Copiar requirements del location-service
+COPY location-service/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copiar archivos del location-service
+COPY location-service/ .
+
+# Copiar la carpeta proto
+COPY proto/ ./proto/
 
 EXPOSE 50051
 

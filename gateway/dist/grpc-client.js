@@ -20,6 +20,7 @@ export function createGrpcClient() {
     const client = new weatherappProto.weatherapp.LocationService(LOCATION_SERVICE_URL, grpc.credentials.createInsecure());
     return client;
 }
+// Función de utilidad para hacer llamadas con timeout
 export function callWithTimeout(call, timeoutMs = 5000) {
     return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
