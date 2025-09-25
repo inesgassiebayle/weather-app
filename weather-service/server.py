@@ -3,8 +3,8 @@ import requests
 import grpc
 from concurrent import futures
 
-import weatherapp_pb2 as pb
-import weatherapp_pb2_grpc as pb_grpc
+from proto import weatherapp_pb2 as pb
+from proto import weatherapp_pb2_grpc as pb_grpc
 
 OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
 
