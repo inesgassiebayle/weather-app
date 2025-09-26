@@ -6,7 +6,7 @@ service LocationService {
 }
 
 service WeatherService {
-  rpc GetWeather (LocationCoordinates) returns (WeatherServiceResponse);
+  rpc getWeather (LocationCoordinates) returns (WeatherServiceResponse);
 }
 
 message LocationServiceRequest {
@@ -21,9 +21,6 @@ message LocationCoordinates {
 message WeatherServiceResponse {
   double temperature = 1;
   double windspeed = 2;
-  string observation_time = 3;
-  string unit_temperature = 4;
-  string unit_windspeed = 5;
-  double humidity = 6;
-  double precip_mm = 7;
+  double humidity = 3;
+  double precipitation = 4;
 }

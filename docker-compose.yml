@@ -8,6 +8,8 @@ services:
       - LOCATION_PORT=${LOCATION_SERVICE_PORT}
     ports:
       - "${LOCATION_SERVICE_PORT}:50051"
+    volumes:
+      - ./proto:/app/proto:ro
 
   weather-service:
     build:
@@ -18,20 +20,24 @@ services:
       - WEATHER_PORT=${WEATHER_SERVICE_PORT}
     ports:
       - "${WEATHER_SERVICE_PORT}:50052"
+    volumes:
+      - ./proto:/app/proto:ro
 
   gateway:
     build:
       context: ./gateway
       dockerfile: Dockerfile
-    container_name: weather-gateway
     environment:
-      - GATEWAY_PORT=${GATEWAY_PORT}
-      - LOCATION_SERVICE_HOST=${LOCATION_SERVICE_HOST}
-      - LOCATION_SERVICE_PORT=${LOCATION_SERVICE_PORT}
-      - WEATHER_SERVICE_HOST=${WEATHER_SERVICE_HOST}
-      - WEATHER_SERVICE_PORT=${WEATHER_SERVICE_PORT}
+      - GATEWAY_PORT=${GATEWAY_PORT:-3000}
+      - LOCATION_SERVICE_HOST=${LOCATION_SERVICE_HOST:-location-service}
+      - LOCATION_SERVICE_PORT=${LOCATION_SERVICE_PORT:-50051}
+      - WEATHER_SERVICE_HOST=${WEATHER_SERVICE_HOST:-weather-service}
+      - WEATHER_SERVICE_PORT=${WEATHER_SERVICE_PORT:-50052}
+      - PROTO_PATH=/app/proto/weatherapp.proto
+    volumes:
+      - ./proto:/app/proto:ro
     ports:
-      - "${GATEWAY_PORT}:3000"
+      - "3000:3000"
     depends_on:
       - location-service
       - weather-service

@@ -15,18 +15,12 @@ class LocationService(weatherapp_pb2_grpc.LocationServiceServicer):
         )
 
 def serve():
-    port = os.getenv("LOCATION_PORT", "50051")
+    port = os.getenv("LOCATION_PORT")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     weatherapp_pb2_grpc.add_LocationServiceServicer_to_server(LocationService(), server)
     server.add_insecure_port(f"[::]:{port}")
     server.start()
-    print(f"🚀 LocationService escuchando en puerto {port}")
-    print(f"📍 Endpoint: [::]:{port}")
-    try:
-        server.wait_for_termination()
-    except KeyboardInterrupt:
-        print("🛑 Deteniendo LocationService...")
-        server.stop(0)
+    server.wait_for_termination()
 
 if __name__ == "__main__":
     serve()
