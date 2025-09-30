@@ -34,8 +34,18 @@ const weatherClient = new proto.weatherapp.WeatherService(
 const app = express();
 app.use(express.json());
 
+function getClientIp(req: express.Request): string | null {
+  let ip = req.ip || req.socket.remoteAddress || null;
+  if (!ip) return null;
+  if (ip.startsWith("::ffff:")) ip = ip.slice(7);
+  if (ip === "::1") ip = "127.0.0.1";
+  return ip;
+}
+
 app.get("/weather", (req, res) => {
-  const ip = (req.query.ip as string);
+  const ipParam = (req.query.ip as string | undefined)?.trim();
+  const ip = ipParam && ipParam.length > 0 ? ipParam : getClientIp(req);
+
   if (!ip) return res.status(400).json({ error: "IP address is required" });
 
   locationClient.getLocation({ ip }, (lerr: any, location: any) => {
